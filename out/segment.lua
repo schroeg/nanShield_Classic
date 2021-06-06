@@ -5,6 +5,7 @@ function aura_env:rotate()
     local base = (self.config.rotationOffset + self.config.direction * 180)
     self.region:Rotate(base + direction * (angle / (segments - 1)) * (self.cloneId - (segments + 1) / 2))
 end
+
 function aura_env:on_tsu(allstates, ...)
     -- self:log('TSU', self.config.segmentCount)
     local now = GetTime()
@@ -54,6 +55,7 @@ function aura_env:on_tsu(allstates, ...)
     end
     return changed
 end
+
 aura_env.segmentSchool = {}
 
 function aura_env:on_nan_shield(event, totalAbsorb, ...)
@@ -71,13 +73,17 @@ function aura_env:on_nan_shield(event, totalAbsorb, ...)
         for i = 1, select("#", ...) do
             value = select(i, ...)
             currentAbsorb = currentAbsorb + value
-            segment = ceil(currentAbsorb / totalAbsorb * self.config.segmentCount)
-            if value > 0 then
-                for s = prevSegment + 1, segment do
-                    self.segmentSchool[s] = self.schools[i]
+
+            if currentAbsorb > 0 and totalAbsorb > 0 then
+                segment = ceil(currentAbsorb / totalAbsorb * self.config.segmentCount)
+                if value > 0 then
+                    for s = prevSegment + 1, segment do
+                        self.segmentSchool[s] = self.schools[i]
+                    end
+                    prevSegment = segment
                 end
-                prevSegment = segment
             end
+            
         end
 
         if currentAbsorb > 0 and totalAbsorb > 0 then
@@ -85,6 +91,7 @@ function aura_env:on_nan_shield(event, totalAbsorb, ...)
         end
     end
 end
+
 aura_env.logPalette = {
     "ff6e7dda",
     "ff21dfb9",
@@ -111,6 +118,7 @@ function aura_env:log(...)
         print(unpack(args))
     end
 end
+
 function aura_env:LowestAbsorb(totalAbsorb, all, physical, magic, ...)
     self:log('LowestAbsorb', all, physical, magic, ...)
     local minValue
@@ -147,6 +155,7 @@ function aura_env:LowestAbsorb(totalAbsorb, all, physical, magic, ...)
     self:log('LowestAbsorbResult', minValue, totalAbsorb, minIdx)
     return minValue, totalAbsorb, minIdx
 end
+
 aura_env.schools = {
     "All",
     "Physical",

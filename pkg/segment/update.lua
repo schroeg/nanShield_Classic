@@ -15,13 +15,17 @@ function aura_env:on_nan_shield(event, totalAbsorb, ...)
         for i = 1, select("#", ...) do
             value = select(i, ...)
             currentAbsorb = currentAbsorb + value
-            segment = ceil(currentAbsorb / totalAbsorb * self.config.segmentCount)
-            if value > 0 then
-                for s = prevSegment + 1, segment do
-                    self.segmentSchool[s] = self.schools[i]
+
+            if currentAbsorb > 0 and totalAbsorb > 0 then
+                segment = ceil(currentAbsorb / totalAbsorb * self.config.segmentCount)
+                if value > 0 then
+                    for s = prevSegment + 1, segment do
+                        self.segmentSchool[s] = self.schools[i]
+                    end
+                    prevSegment = segment
                 end
-                prevSegment = segment
             end
+            
         end
 
         if currentAbsorb > 0 and totalAbsorb > 0 then

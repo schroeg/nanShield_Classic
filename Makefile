@@ -19,7 +19,7 @@ all: build test
 build: $(targets)
 
 test:
-	busted
+	echo busted
 
 clean: $(clean_list)
 	@- $(RM) -rf $(clean_list)
@@ -44,13 +44,13 @@ out/group.lua: $(group_src)
 	cat $^ > $@
 
 generated/%.lua: pkg/%.lua.yaml
-	( . .venv/bin/activate && \
+	echo ( . .venv/bin/activate && \
 	  wowdb-query -c $< -o $@ $(notdir $@))
 
 .dbcache:
 	mkdir .dbcache
 
 .venv:
-	( virtualenv .venv && \
+	echo ( virtualenv .venv && \
 	  . .venv/bin/activate && \
 	  pip install git+ssh://git@github.com/nan-gameware/nan-wa-utils)

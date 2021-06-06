@@ -1,3 +1,4 @@
+-- Package text/update
 function aura_env:on_nan_shield(event, ...)
     self:log(event, ...)
     local minValue, totalAbsorb, minIdx = self:LowestAbsorb(...)
@@ -6,3 +7,5 @@ function aura_env:on_nan_shield(event, ...)
     self.totalAbsorb = ceil(totalAbsorb)
     self:log('SetValues', self.currentSchool, self.currentAbsorb, self.totalAbsorb)
 end
+-- Package end
+

@@ -1,3 +1,4 @@
+-- Package common/logging
 aura_env.logPalette = {
     "ff6e7dda",
     "ff21dfb9",
@@ -24,3 +25,5 @@ function aura_env:log(...)
         print(unpack(args))
     end
 end
+-- Package end
+

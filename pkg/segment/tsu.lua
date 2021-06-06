@@ -1,3 +1,4 @@
+-- Package segment/tsu
 function aura_env:on_tsu(allstates, ...)
     -- self:log('TSU', self.config.segmentCount)
     local now = GetTime()
@@ -47,3 +48,5 @@ function aura_env:on_tsu(allstates, ...)
     end
     return changed
 end
+-- Package end
+

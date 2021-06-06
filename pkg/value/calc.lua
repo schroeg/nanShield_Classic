@@ -1,3 +1,4 @@
+-- Package value/calc
 aura_env.active = 0
 aura_env.spellSchool = {}
 aura_env.currentAbsorb = {}
@@ -172,3 +173,5 @@ function aura_env:UpdateValues()
     WeakAuras.ScanEvents("WA_NAN_SHIELD", total, unpack(values))
     self:log('UpdateValues', total > 0)
 end
+-- Package end
+

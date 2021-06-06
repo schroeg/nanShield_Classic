@@ -1,3 +1,4 @@
+-- Package common/lowabsorb
 function aura_env:LowestAbsorb(totalAbsorb, all, physical, magic, ...)
     self:log('LowestAbsorb', all, physical, magic, ...)
     local minValue
@@ -34,3 +35,5 @@ function aura_env:LowestAbsorb(totalAbsorb, all, physical, magic, ...)
     self:log('LowestAbsorbResult', minValue, totalAbsorb, minIdx)
     return minValue, totalAbsorb, minIdx
 end
+-- Package end
+

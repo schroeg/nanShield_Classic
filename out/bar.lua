@@ -50,32 +50,7 @@ function aura_env:on_tsu(allstates, event, ...)
     end
     return changed
 end
-aura_env.logPalette = {
-    "ff6e7dda",
-    "ff21dfb9",
-    "ffe3f57a",
-    "ffed705a",
-    "fff8a3e6",
-}
-
-function aura_env:log(...)
-    if self.config and self.config.debugEnabled then
-        local palette = self.logPalette
-        local args = {
-            self.cloneId and
-            format("[%s:%s]", self.id, self.cloneId) or
-            format("[%s]", self.id),
-            ...
-        }
-        for i = 1, #args do
-            args[i] = format(
-                "|c%s%s|r",
-                palette[1 + (i - 1) % #palette],
-                tostring(args[i]))
-        end
-        print(unpack(args))
-    end
-end
+-- Package common/lowabsorb
 function aura_env:LowestAbsorb(totalAbsorb, all, physical, magic, ...)
     self:log('LowestAbsorb', all, physical, magic, ...)
     local minValue
@@ -112,6 +87,38 @@ function aura_env:LowestAbsorb(totalAbsorb, all, physical, magic, ...)
     self:log('LowestAbsorbResult', minValue, totalAbsorb, minIdx)
     return minValue, totalAbsorb, minIdx
 end
+-- Package end
+
+-- Package common/logging
+aura_env.logPalette = {
+    "ff6e7dda",
+    "ff21dfb9",
+    "ffe3f57a",
+    "ffed705a",
+    "fff8a3e6",
+}
+
+function aura_env:log(...)
+    if self.config and self.config.debugEnabled then
+        local palette = self.logPalette
+        local args = {
+            self.cloneId and
+            format("[%s:%s]", self.id, self.cloneId) or
+            format("[%s]", self.id),
+            ...
+        }
+        for i = 1, #args do
+            args[i] = format(
+                "|c%s%s|r",
+                palette[1 + (i - 1) % #palette],
+                tostring(args[i]))
+        end
+        print(unpack(args))
+    end
+end
+-- Package end
+
+-- Package common/schools
 aura_env.schools = {
     "All",
     "Physical",
@@ -128,3 +135,5 @@ aura_env.schoolIdx = {}
 for idx, id in ipairs(aura_env.schoolIds) do
     aura_env.schoolIdx[id] = idx
 end
+-- Package end
+

@@ -1,3 +1,4 @@
+-- Package common/schools
 aura_env.schools = {
     "All",
     "Physical",
@@ -14,3 +15,5 @@ aura_env.schoolIdx = {}
 for idx, id in ipairs(aura_env.schoolIds) do
     aura_env.schoolIdx[id] = idx
 end
+-- Package end
+

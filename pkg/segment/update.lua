@@ -1,3 +1,4 @@
+-- Package segment/update
 aura_env.segmentSchool = {}
 
 function aura_env:on_nan_shield(event, totalAbsorb, ...)
@@ -33,3 +34,5 @@ function aura_env:on_nan_shield(event, totalAbsorb, ...)
         end
     end
 end
+-- Package end
+

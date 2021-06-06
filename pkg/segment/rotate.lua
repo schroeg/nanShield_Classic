@@ -1,3 +1,4 @@
+-- Package segment/rotate
 function aura_env:rotate()
     local segments = self.config.segmentCount
     local angle = self.config.curveAngle
@@ -5,3 +6,5 @@ function aura_env:rotate()
     local base = (self.config.rotationOffset + self.config.direction * 180)
     self.region:Rotate(base + direction * (angle / (segments - 1)) * (self.cloneId - (segments + 1) / 2))
 end
+-- Package end
+

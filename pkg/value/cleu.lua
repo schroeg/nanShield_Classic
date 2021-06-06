@@ -1,3 +1,4 @@
+-- Package value/cleu
 function aura_env:on_cleu(triggerEvent, ...)
     local event, spellName, spellId, auraName, value
     local casterGUID = select(8, ...)
@@ -28,3 +29,5 @@ function aura_env:on_cleu(triggerEvent, ...)
         self:ResetValues()
     end
 end
+-- Package end
+

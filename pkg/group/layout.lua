@@ -1,3 +1,4 @@
+-- Package group/layout
 function(newPositions, activeRegions)
     local offset = 9/64 -- target_indicator_glow texture center offset
     local distance = 18/64
@@ -34,3 +35,5 @@ function(newPositions, activeRegions)
         end
     end
 end
+-- Package end
+

@@ -7,7 +7,13 @@ aura_env.schoolAbsorb = {0, 0, 0, 0, 0, 0, 0, 0, 0}
 
 local function improvedPowerWordShieldMultiplier()
     -- FIXME: GetTalentInfo(1, 5)
-    return 1.15
+    --return 1.15
+    
+    local _,_,_,_,r = GetTalentInfo(1,5)
+    local m = r*0.5
+    
+    aura_env:log('improvedPowerWordShieldMultiplier', m)
+    return 1+m
 end
 
 aura_env.talentMultiplier = {
@@ -21,6 +27,8 @@ aura_env.talentMultiplier = {
     [10899] = improvedPowerWordShieldMultiplier,
     [10900] = improvedPowerWordShieldMultiplier,
     [10901] = improvedPowerWordShieldMultiplier,
+    [25217] = improvedPowerWordShieldMultiplier,
+    [25218] = improvedPowerWordShieldMultiplier,
 }
 
 function aura_env:CalculateAbsorbValue(spellName, spellId, absorbInfo)
@@ -36,19 +44,19 @@ function aura_env:CalculateAbsorbValue(spellName, spellId, absorbInfo)
     local spellLevel = absorbInfo[keys.spellLevel]
     local bonusMult = absorbInfo[keys.healingMultiplier]
     local baseMultFn = self.talentMultiplier[spellId]
-    local levelPenalty = min(1, 1 - (20 - spellLevel) * .0375)
+    local levelPenalty = min(1, 1 - (20 - spellLevel) * .03)
     local levels = max(0, min(level, maxLevel) - baseLevel)
     local baseMult = baseMultFn and baseMultFn() or 1
-    
+
     value = (
         baseMult * (base + levels * perLevel) +
         bonusHealing * bonusMult * levelPenalty
     )
-    
+
     self:log('CalculateAbsorbValue', spellName,
         value, base, perLevel, levels, baseMult,
-    bonusHealing, bonusMult, levelPenalty)
-    
+        bonusHealing, bonusMult, levelPenalty)
+
     return value
 end
 
@@ -69,35 +77,35 @@ end
 function aura_env:ApplyAura(spellName)
     local school = self.spellSchool[spellName]
     self:log('ApplyAura', spellName, school)
-    
+
     if 0 ~= school then
         local spellId = self:GetBuffId(spellName)
         local absorbInfo = self.absorbDb[spellId]
-        
-        self:log('ApplyAuraAbsorbOrNew', spellId, absorbInfo)
-        
+
+        self:log('ApplyAuraAbsorbOrNew', spellId)
+
         if absorbInfo then
             local value = self:CalculateAbsorbValue(
             spellName, spellId, absorbInfo)
-            
+
             self:log('ApplyAuraSchool', school)
             if nil == school then
                 school = absorbInfo[self.absorbDbKeys.school]
                 self.spellSchool[spellName] = school
             end
-            
+
             if self.maxAbsorb[spellName] then
                 self:log('ApplyAuraUpdateCurrent', spellName, value)
                 self.currentAbsorb[spellName] = value
             else
                 self:log('ApplyAuraSetCurrent', spellName, value)
                 self.active = self.active + 1
-                
+
                 -- If damage event happened before aura was removed
                 local prevValue = self.currentAbsorb[spellName]
                 self.currentAbsorb[spellName] = value + (prevValue or 0)
             end
-            
+
             self:log('ApplyAuraSetMax', spellName, value)
             self.maxAbsorb[spellName] = value
             self:UpdateValues()
@@ -154,11 +162,11 @@ function aura_env:UpdateValues()
     local current = self.currentAbsorb
     local total = 0
     local key, value, school
-    
+
     for i = 1, #values do
         values[i] = 0
     end
-    
+
     for spell, maxValue in pairs(self.maxAbsorb) do
         school = spellSchool[spell]
         key = keys[school]
@@ -167,7 +175,7 @@ function aura_env:UpdateValues()
         values[key] = values[key] + value
         self:log('UpdateValues', spell, school, key, maxValue, value)
     end
-    
+
     self.totalAbsorb = total
     WeakAuras.ScanEvents("WA_NAN_SHIELD", total, unpack(values))
     self:log('UpdateValues', total > 0)

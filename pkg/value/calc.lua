@@ -8,7 +8,13 @@ aura_env.schoolAbsorb = {0, 0, 0, 0, 0, 0, 0, 0, 0}
 
 local function improvedPowerWordShieldMultiplier()
     -- FIXME: GetTalentInfo(1, 5)
-    return 1.15
+    --return 1.15
+    
+    local _,_,_,_,r = GetTalentInfo(1,5)
+    local m = r*0.5
+    
+    aura_env:log('improvedPowerWordShieldMultiplier', m)
+    return 1+m
 end
 
 aura_env.talentMultiplier = {
@@ -22,6 +28,8 @@ aura_env.talentMultiplier = {
     [10899] = improvedPowerWordShieldMultiplier,
     [10900] = improvedPowerWordShieldMultiplier,
     [10901] = improvedPowerWordShieldMultiplier,
+    [25217] = improvedPowerWordShieldMultiplier,
+    [25218] = improvedPowerWordShieldMultiplier,
 }
 
 function aura_env:CalculateAbsorbValue(spellName, spellId, absorbInfo)
@@ -37,7 +45,7 @@ function aura_env:CalculateAbsorbValue(spellName, spellId, absorbInfo)
     local spellLevel = absorbInfo[keys.spellLevel]
     local bonusMult = absorbInfo[keys.healingMultiplier]
     local baseMultFn = self.talentMultiplier[spellId]
-    local levelPenalty = min(1, 1 - (20 - spellLevel) * .0375)
+    local levelPenalty = min(1, 1 - (20 - spellLevel) * .03)
     local levels = max(0, min(level, maxLevel) - baseLevel)
     local baseMult = baseMultFn and baseMultFn() or 1
 
@@ -79,7 +87,7 @@ function aura_env:ApplyAura(spellName)
 
         if absorbInfo then
             local value = self:CalculateAbsorbValue(
-                spellName, spellId, absorbInfo)
+            spellName, spellId, absorbInfo)
 
             self:log('ApplyAuraSchool', school)
             if nil == school then

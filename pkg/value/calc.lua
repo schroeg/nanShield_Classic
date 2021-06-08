@@ -34,7 +34,7 @@ aura_env.talentMultiplier = {
 
 function aura_env:CalculateAbsorbValue(spellName, spellId, absorbInfo)
     -- FIXME: if caster != player
-    local value = 0
+    local value
     local keys = self.absorbDbKeys
     local bonusHealing = GetSpellBonusHealing()
     local level = UnitLevel("player")
@@ -62,9 +62,10 @@ function aura_env:CalculateAbsorbValue(spellName, spellId, absorbInfo)
 end
 
 function aura_env:GetBuffId(spellName)
-    local auraName, spellId
+    local spellId
     for i = 1, 255 do
-        auraName, _, _, _, _, _, _, _, _, spellId = UnitBuff("player", i)
+        local auraName, _, _, _, _, _, _, _, _, spell_id = UnitBuff("player", i)
+        spellId = spell_id
         if auraName == spellName then
             break
         elseif not auraName then

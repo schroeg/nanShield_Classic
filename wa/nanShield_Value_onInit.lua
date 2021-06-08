@@ -33,7 +33,7 @@ aura_env.talentMultiplier = {
 
 function aura_env:CalculateAbsorbValue(spellName, spellId, absorbInfo)
     -- FIXME: if caster != player
-    local value = 0
+    local value
     local keys = self.absorbDbKeys
     local bonusHealing = GetSpellBonusHealing()
     local level = UnitLevel("player")
@@ -47,23 +47,24 @@ function aura_env:CalculateAbsorbValue(spellName, spellId, absorbInfo)
     local levelPenalty = min(1, 1 - (20 - spellLevel) * .03)
     local levels = max(0, min(level, maxLevel) - baseLevel)
     local baseMult = baseMultFn and baseMultFn() or 1
-
+    
     value = (
         baseMult * (base + levels * perLevel) +
         bonusHealing * bonusMult * levelPenalty
     )
-
+    
     self:log('CalculateAbsorbValue', spellName,
         value, base, perLevel, levels, baseMult,
-        bonusHealing, bonusMult, levelPenalty)
-
+    bonusHealing, bonusMult, levelPenalty)
+    
     return value
 end
 
 function aura_env:GetBuffId(spellName)
-    local auraName, spellId
+    local spellId
     for i = 1, 255 do
-        auraName, _, _, _, _, _, _, _, _, spellId = UnitBuff("player", i)
+        local auraName, _, _, _, _, _, _, _, _, spell_id = UnitBuff("player", i)
+        spellId = spell_id
         if auraName == spellName then
             break
         elseif not auraName then
@@ -77,35 +78,35 @@ end
 function aura_env:ApplyAura(spellName)
     local school = self.spellSchool[spellName]
     self:log('ApplyAura', spellName, school)
-
+    
     if 0 ~= school then
         local spellId = self:GetBuffId(spellName)
         local absorbInfo = self.absorbDb[spellId]
-
+        
         self:log('ApplyAuraAbsorbOrNew', spellId)
-
+        
         if absorbInfo then
             local value = self:CalculateAbsorbValue(
             spellName, spellId, absorbInfo)
-
+            
             self:log('ApplyAuraSchool', school)
             if nil == school then
                 school = absorbInfo[self.absorbDbKeys.school]
                 self.spellSchool[spellName] = school
             end
-
+            
             if self.maxAbsorb[spellName] then
                 self:log('ApplyAuraUpdateCurrent', spellName, value)
                 self.currentAbsorb[spellName] = value
             else
                 self:log('ApplyAuraSetCurrent', spellName, value)
                 self.active = self.active + 1
-
+                
                 -- If damage event happened before aura was removed
                 local prevValue = self.currentAbsorb[spellName]
                 self.currentAbsorb[spellName] = value + (prevValue or 0)
             end
-
+            
             self:log('ApplyAuraSetMax', spellName, value)
             self.maxAbsorb[spellName] = value
             self:UpdateValues()
@@ -162,11 +163,11 @@ function aura_env:UpdateValues()
     local current = self.currentAbsorb
     local total = 0
     local key, value, school
-
+    
     for i = 1, #values do
         values[i] = 0
     end
-
+    
     for spell, maxValue in pairs(self.maxAbsorb) do
         school = spellSchool[spell]
         key = keys[school]
@@ -175,14 +176,14 @@ function aura_env:UpdateValues()
         values[key] = values[key] + value
         self:log('UpdateValues', spell, school, key, maxValue, value)
     end
-
+    
     self.totalAbsorb = total
     WeakAuras.ScanEvents("WA_NAN_SHIELD", total, unpack(values))
     self:log('UpdateValues', total > 0)
 end
 
 function aura_env:on_cleu(triggerEvent, ...)
-    local event, spellName, spellId, auraName, value
+    local event, spellName, value
     local casterGUID = select(8, ...)
     
     if triggerEvent == 'OPTIONS' then
@@ -485,7 +486,6 @@ aura_env.absorbDb = {
     [ 33405] = { 127,  1074,  4.8, 70, 76, 70, 0.1}, -- [Mage] Ice Barrier (Rank 6)
     [ 35064] = { 127,  7999,    0, 20,  0, 20, 0  }, -- [Mage] Mana Shield
     [ 38151] = { 127,  9999,    0, 20,  0, 20, 0  }, -- [Mage] Mana Shield
-    [ 29880] = { 127, 59999,    0, 20,  0, 20, 0  }, -- [Mage] Mana Shield
     [ 29880] = { 127, 60000,    6, 20,  0, 20, 0  }, -- [Mage] Mana Shield
     [  1463] = { 127,   119,    0, 20, 27, 20, 0  }, -- [Mage] Mana Shield (Rank 1)
     [  8494] = { 127,   209,    0, 28, 35, 28, 0  }, -- [Mage] Mana Shield (Rank 2)
@@ -503,5 +503,4 @@ aura_env.absorbDb = {
     [ 19443] = { 127,  1904,  6.4, 56, 62, 56, 0  }, -- [Warlock] Sacrifice (Rank 6)
     [ 27273] = { 127,  2854,  7.5, 64, 70, 64, 0  }, -- [Warlock] Sacrifice (Rank 7)
 }
-
 

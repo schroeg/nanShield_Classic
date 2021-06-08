@@ -1,6 +1,6 @@
 -- Package value/cleu
 function aura_env:on_cleu(triggerEvent, ...)
-    local event, spellName, spellId, auraName, value
+    local event, spellName, value
     local casterGUID = select(8, ...)
 
     if triggerEvent == 'OPTIONS' then

@@ -10,7 +10,7 @@ local function improvedPowerWordShieldMultiplier()
     --return 1.15
     
     local _,_,_,_,r = GetTalentInfo(1,5)
-    local m = r*0.5
+    local m = r*0.05
     
     aura_env:log('improvedPowerWordShieldMultiplier', m)
     return 1+m
@@ -503,4 +503,6 @@ aura_env.absorbDb = {
     [ 19443] = { 127,  1904,  6.4, 56, 62, 56, 0  }, -- [Warlock] Sacrifice (Rank 6)
     [ 27273] = { 127,  2854,  7.5, 64, 70, 64, 0  }, -- [Warlock] Sacrifice (Rank 7)
 }
+
+
 

@@ -11,7 +11,7 @@ local function improvedPowerWordShieldMultiplier()
     --return 1.15
     
     local _,_,_,_,r = GetTalentInfo(1,5)
-    local m = r*0.5
+    local m = r*0.05
     
     aura_env:log('improvedPowerWordShieldMultiplier', m)
     return 1+m

@@ -43,7 +43,7 @@ function aura_env:on_tsu(allstates, ...)
             end
         end
         for i = 1, active do
-            if allstates[i].show then
+            if i <= #allstates and allstates[i].show then
                 if allstates[i].school ~= self.segmentSchool[i] then
                     self:log('TSUSchool', i, allstates[i].school, self.segmentSchool[i])
                     allstates[i].school = self.segmentSchool[i]

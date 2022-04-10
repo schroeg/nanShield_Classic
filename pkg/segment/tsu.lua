@@ -27,7 +27,7 @@ function aura_env:on_tsu(allstates, ...)
             end
         else
             for i = 1, active do
-                if not allstates[i].show then
+                if i <= #allstates and not allstates[i].show then
                     allstates[i].show = true
                     allstates[i].changed = true
                     changed = true

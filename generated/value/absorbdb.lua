@@ -192,6 +192,7 @@ aura_env.absorbDb = {
     [ 33405] = { 127,  1074,  4.8, 70, 76, 70, 0.1}, -- [Mage] Ice Barrier (Rank 6)
     [ 35064] = { 127,  7999,    0, 20,  0, 20, 0  }, -- [Mage] Mana Shield
     [ 38151] = { 127,  9999,    0, 20,  0, 20, 0  }, -- [Mage] Mana Shield
+    [ 29880] = { 127, 59999,    0, 20,  0, 20, 0  }, -- [Mage] Mana Shield
     [ 29880] = { 127, 60000,    6, 20,  0, 20, 0  }, -- [Mage] Mana Shield
     [  1463] = { 127,   119,    0, 20, 27, 20, 0  }, -- [Mage] Mana Shield (Rank 1)
     [  8494] = { 127,   209,    0, 28, 35, 28, 0  }, -- [Mage] Mana Shield (Rank 2)

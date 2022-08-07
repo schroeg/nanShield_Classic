@@ -1,29 +1,39 @@
 clean_list += $(wildcard *.out)
 clean_list += $(wildcard generated/*/*.lua)
-clean_list += .venv .dbcache
+
+init_list += .venv .dbcache
+
 group_src += $(wildcard pkg/group/*.lua)
-value_src += $(wildcard pkg/value/*.lua) $(wildcard pkg/common/*.lua)
+
+value_src += $(wildcard pkg/common/*.lua) $(wildcard pkg/value/*.lua)
 value_src += $(foreach t,$(wildcard pkg/value/*.lua.yaml),$(t:pkg/%.yaml=generated/%))
-segment_src += $(wildcard pkg/segment/*.lua) $(wildcard pkg/common/*.lua)
+
+segment_src += $(wildcard pkg/common/*.lua) $(wildcard pkg/segment/*.lua)
 segment_src += $(foreach t,$(wildcard pkg/segment/*.lua.yaml),$(t:pkg/%.yaml=generated/%))
-text_src += $(wildcard pkg/text/*.lua) $(wildcard pkg/common/*.lua)
+
+text_src += $(wildcard pkg/common/*.lua) $(wildcard pkg/text/*.lua)
 text_src += $(foreach t,$(wildcard pkg/text/*.lua.yaml),$(t:pkg/%.yaml=generated/%))
-bar_src += $(wildcard pkg/bar/*.lua) $(wildcard pkg/common/*.lua)
+
+bar_src += $(wildcard pkg/common/*.lua) $(wildcard pkg/bar/*.lua)
 bar_src += $(foreach t,$(wildcard pkg/bar/*.lua.yaml),$(t:pkg/%.yaml=generated/%))
+
 targets += out/value.lua out/segment.lua out/text.lua out/bar.lua out/group.lua
 
 .PHONY: all clean test coverage generate
 
-all: build test
+all: $(init_list) build
 
 build: $(targets)
 
 test:
 	echo busted
 
-clean: $(clean_list)
+clean:
 	@- $(RM) -rf $(clean_list)
 
+cleanall:
+	@- $(RM) -rf $(clean_list) $(init_list)
+	
 coverage: clean
 	busted --coverage
 	luacov
@@ -44,13 +54,15 @@ out/group.lua: $(group_src)
 	cat $^ > $@
 
 generated/%.lua: pkg/%.lua.yaml
-	echo ( . .venv/bin/activate && \
+	( . .venv/bin/activate && \
 	  wowdb-query -c $< -o $@ $(notdir $@))
 
 .dbcache:
 	mkdir .dbcache
 
 .venv:
-	echo ( virtualenv .venv && \
+	( virtualenv .venv && \
 	  . .venv/bin/activate && \
-	  pip install git+ssh://git@github.com/nan-gameware/nan-wa-utils)
+	  pip install git+ssh://git@github.com/schroeg/nan-wa-utils)
+
+

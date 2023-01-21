@@ -1,46 +1,4 @@
-function aura_env:on_tsu(allstates, ...)
-    -- self:log('TSU', self.config.segmentCount)
-    local now = GetTime()
-    local currentAbsorb = self.currentAbsorb
-    local state = allstates[1]
-
-    if not state then
-        state = {
-            changed = true,
-            show = false,
-            progressType = "static",
-            school = "All",
-            value = 0,
-            total = 0,
-        }
-        allstates[1] = state
-    end
-
-    if state.show ~= (currentAbsorb > 0) then
-        state.show = currentAbsorb > 0
-        state.changed = true
-        state.value = currentAbsorb
-        state.total = self.totalAbsorb
-        state.school = self.currentSchool
-        self.timestamp = now
-    elseif state.value ~= currentAbsorb then
-        state.changed = true
-        state.value = currentAbsorb
-        state.total = self.totalAbsorb
-        state.school = self.currentSchool
-        self.timestamp = now
-    end
-
-    return state.changed
-end
-function aura_env:on_nan_shield(event, ...)
-    self:log(event, ...)
-    local minValue, totalAbsorb, minIdx = self:LowestAbsorb(...)
-    self.currentAbsorb = ceil(minValue)
-    self.currentSchool = self.schools[minIdx]
-    self.totalAbsorb = ceil(totalAbsorb)
-    self:log('SetValues', self.currentSchool, self.currentAbsorb, self.totalAbsorb)
-end
+-- Package common/logging
 aura_env.logPalette = {
     "ff6e7dda",
     "ff21dfb9",
@@ -67,6 +25,9 @@ function aura_env:log(...)
         print(unpack(args))
     end
 end
+-- Package end
+
+-- Package common/lowabsorb
 function aura_env:LowestAbsorb(totalAbsorb, all, physical, magic, ...)
     self:log('LowestAbsorb', all, physical, magic, ...)
     local minValue
@@ -103,6 +64,9 @@ function aura_env:LowestAbsorb(totalAbsorb, all, physical, magic, ...)
     self:log('LowestAbsorbResult', minValue, totalAbsorb, minIdx)
     return minValue, totalAbsorb, minIdx
 end
+-- Package end
+
+-- Package common/schools
 aura_env.schools = {
     "All",
     "Physical",
@@ -119,3 +83,54 @@ aura_env.schoolIdx = {}
 for idx, id in ipairs(aura_env.schoolIds) do
     aura_env.schoolIdx[id] = idx
 end
+-- Package end
+
+-- Package text/tsu
+function aura_env:on_tsu(allstates, ...)
+    -- self:log('TSU', self.config.segmentCount)
+    local now = GetTime()
+    local currentAbsorb = self.currentAbsorb or 0
+    local state = allstates[1]
+
+    if not state then
+        state = {
+            changed = true,
+            show = false,
+            progressType = "static",
+            school = "All",
+            value = 0,
+            total = 0,
+        }
+        allstates[1] = state
+    end
+
+    if state.show ~= (currentAbsorb > 0) then
+        state.show = currentAbsorb > 0
+        state.changed = true
+        state.value = currentAbsorb
+        state.total = self.totalAbsorb
+        state.school = self.currentSchool
+        self.timestamp = now
+    elseif state.value ~= currentAbsorb then
+        state.changed = true
+        state.value = currentAbsorb
+        state.total = self.totalAbsorb
+        state.school = self.currentSchool
+        self.timestamp = now
+    end
+
+    return state.changed
+end
+-- Package end
+
+-- Package text/update
+function aura_env:on_nan_shield(event, ...)
+    self:log(event, ...)
+    local minValue, totalAbsorb, minIdx = self:LowestAbsorb(...)
+    self.currentAbsorb = ceil(minValue)
+    self.currentSchool = self.schools[minIdx]
+    self.totalAbsorb = ceil(totalAbsorb)
+    self:log('SetValues', self.currentSchool, self.currentAbsorb, self.totalAbsorb)
+end
+-- Package end
+

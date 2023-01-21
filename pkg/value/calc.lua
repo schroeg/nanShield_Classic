@@ -28,8 +28,6 @@ aura_env.talentMultiplier = {
     [10899] = improvedPowerWordShieldMultiplier,
     [10900] = improvedPowerWordShieldMultiplier,
     [10901] = improvedPowerWordShieldMultiplier,
-    [25217] = improvedPowerWordShieldMultiplier,
-    [25218] = improvedPowerWordShieldMultiplier,
 }
 
 function aura_env:CalculateAbsorbValue(spellName, spellId, absorbInfo)

@@ -1,3 +1,4 @@
+-- Package bar/tsu
 function aura_env:on_tsu(allstates, event, ...)
     self:log(event, ...)
     local changed = false
@@ -50,3 +51,5 @@ function aura_env:on_tsu(allstates, event, ...)
     end
     return changed
 end
+-- Package end
+

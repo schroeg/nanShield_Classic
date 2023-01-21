@@ -6,10 +6,10 @@ function(newPositions, activeRegions)
     local curveAngle, segmentCount, direction, base, direction
 
     for i, r in ipairs(activeRegions) do
-        if r.region.GetRotation then
+        if r.region.GetBaseRotation then
             direction = r.data.config.direction
             base = (r.data.config.rotationOffset + direction * 180)
-            angle = r.region:GetRotation() - direction * 180
+            angle = r.region:GetBaseRotation() - direction * 180
             h = r.data.height
             w = r.data.width
             curveAngle = r.data.config.curveAngle

@@ -2,7 +2,7 @@
 function aura_env:on_tsu(allstates, ...)
     -- self:log('TSU', self.config.segmentCount)
     local now = GetTime()
-    local currentAbsorb = self.currentAbsorb
+    local currentAbsorb = self.currentAbsorb or 0
     local state = allstates[1]
 
     if not state then

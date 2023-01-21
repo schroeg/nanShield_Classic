@@ -2,8 +2,8 @@
 function(newPositions, activeRegions)
     local offset = 9/64 -- target_indicator_glow texture center offset
     local distance = 18/64
-    local angle, x, y, h, w, s, c, sb, cb, da
-    local curveAngle, segmentCount, direction, base, direction
+    local angle, x, y, h, w, s, c, sb, cb, da, radius
+    local curveAngle, segmentCount, direction, base
 
     for i, r in ipairs(activeRegions) do
         if r.region.GetBaseRotation then
